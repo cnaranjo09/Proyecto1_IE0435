@@ -24,7 +24,7 @@ python3 --version
 
 
 ### 3. Crear entorno virtual
-Se de crear un entorno virtual porque permite aislar las dependencias del proyecto del resto del sistema, evitando conflictos entre versiones de librerías y asegurando que cualquier persona pueda reproducir el entrenamiento en las mismas condiciones en que fue desarrollado. De esta forma, el proyecto se vuelve más estable, portátil y profesional, ya que no depende de configuraciones globales del sistema.
+Se debe crear un entorno virtual porque permite aislar las dependencias del proyecto del resto del sistema, evitando conflictos entre versiones de librerías y asegurando que cualquier persona pueda reproducir el entrenamiento en las mismas condiciones en que fue desarrollado. De esta forma, el proyecto se vuelve más estable y portátil, ya que no depende de configuraciones globales del sistema.
 
 ```bash
 python3 -m venv venv
