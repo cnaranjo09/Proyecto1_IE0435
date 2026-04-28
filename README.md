@@ -47,10 +47,12 @@ pip install numpy pandas scikit-learn pillow joblib
 
 ### 5. Verificar estructura del proyecto (IMPORTANTE)
  Debe existir:
+ 
+```bash
  dataset/
    ├── positivos/
    └── negativos/
-
+```
 ### 6. Ejecutar entrenamiento
 ```
 cd src
