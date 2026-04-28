@@ -1,29 +1,48 @@
 # Proyecto1_IE0435
-Proyecto sobre algoritmos de IA
+Proyecto sobre clasificación de contaminaciones usando aprendizaje automático.
 
-## Reproducir el entrenamiento del modelo
+## 🔧 Reproducir el entrenamiento del modelo
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <https://github.com/cnaranjo09/Proyecto1_IE0435.git>
-cd <Proyecto1_IE0435>
+git clone https://github.com/cnaranjo09/Proyecto1_IE0435.git
+cd Proyecto1_IE0435
 ```
-### 2. Crear entorno virtual
+
+### 2. Requisitos
+
+Instalar python (en caso de no tenerlo)
+
+ **Linux (Ubuntu/Debian)*** 
+```bash
+sudo apt update 
+sudo apt install python3 python3-venv python3-pip -y 
+python3 --version
+```
+
+
+
+### 3. Crear entorno virtual
+Se de crear un entorno virtual porque permite aislar las dependencias del proyecto del resto del sistema, evitando conflictos entre versiones de librerías y asegurando que cualquier persona pueda reproducir el entrenamiento en las mismas condiciones en que fue desarrollado. De esta forma, el proyecto se vuelve más estable, portátil y profesional, ya que no depende de configuraciones globales del sistema.
+
 ```bash
 python3 -m venv venv
 ```
-### 3. Activar entorno virtual
+### 4. Activar entorno virtual
 ### Linux
 ```bash
 source venv/bin/activate
 ```
-### Windows:
-venv\Scripts\activate
 
-### 4. Instalar dependencias
+### Windows:
 ```bash
-pip install -r requirements.txt
+venv\Scripts\activate
+```
+### Instalar dependencias
+Dentro del entorno virtual
+```bash
+pip install numpy pandas scikit-learn pillow joblib
 ```
 
 ### 5. Verificar estructura del proyecto (IMPORTANTE)
