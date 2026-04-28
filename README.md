@@ -6,8 +6,8 @@ Proyecto sobre algoritmos de IA
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd <NOMBRE_DEL_PROYECTO>
+git clone <https://github.com/cnaranjo09/Proyecto1_IE0435.git>
+cd <Proyecto1_IE0435>
 ```
 ### 2. Crear entorno virtual
 ```bash
