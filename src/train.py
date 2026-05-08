@@ -1,12 +1,11 @@
 import os
-import pandas as pd
 import numpy as np
+import pandas as pd
 import joblib
-
-from utils import procesar_imagen
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, classification_report
+from sklearn.utils import shuffle
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import BernoulliNB
@@ -15,56 +14,46 @@ from sklearn.svm import SVC
 
 
 # =========================
-# 1. CARGAR DATASET
+# 1. CARGAR DATASET DESDE CSVs
 # =========================
+def cargar_dataset_csvs():
+    ruta_csvs = "../data/csvs"
+    dataframes = []
+
+    print("Cargando CSVs...")
+
+    for archivo in os.listdir(ruta_csvs):
+        if archivo.endswith(".csv"):
+            ruta = os.path.join(ruta_csvs, archivo)
+            print(f"  -> {archivo}")
+
+            df = pd.read_csv(ruta)
+
+            # 🔥 ignorar nombres de columnas
+            df.columns = range(df.shape[1])
+
+            dataframes.append(df)
+
+    # Unir todos
+    df_total = pd.concat(dataframes, ignore_index=True)
+
+    print(f"\nTotal de ejemplos: {df_total.shape[0]}")
+    print(f"Total de columnas: {df_total.shape[1]}")
+
+    # 🔥 separar por posición
+    X = df_total.iloc[:, :-1].values
+    y = df_total.iloc[:, -1].values
+
+    # 🔥 limpiar NaN
+    mask = ~pd.isna(y)
+    X = X[mask]
+    y = y[mask]
+
+    print("Valores únicos en y:", set(y))
+
+    return X, y
 
 
-def cargar_dataset():
-    X, y = [], []
-
-    print("Procesando positivos...")
-    for archivo in os.listdir("../dataset/positivos"):
-        ruta = os.path.join("../dataset/positivos", archivo)
-        try:
-            X.append(procesar_imagen(ruta))
-            y.append(1)
-            print(f"✔ {archivo}")
-        except Exception as e:
-            print(f"❌ ERROR en {archivo}: {e}")
-
-    print("\nProcesando negativos...")
-    for archivo in os.listdir("../dataset/negativos"):
-        ruta = os.path.join("../dataset/negativos", archivo)
-        try:
-            X.append(procesar_imagen(ruta))
-            y.append(0)
-            print(f"✔ {archivo}")
-        except Exception as e:
-            print(f"❌ ERROR en {archivo}: {e}")
-
-    print(f"\nTotal cargadas correctamente: {len(X)}")
-
-    return np.array(X), np.array(y)
-
-
-'''
-def cargar_dataset():
-    X, y = [], []
-
-    for archivo in os.listdir("../dataset/positivos"):
-        ruta = os.path.join("../dataset/positivos", archivo)
-        X.append(procesar_imagen(ruta))
-        y.append(1)
-
-    for archivo in os.listdir("../dataset/negativos"):
-        ruta = os.path.join("../dataset/negativos", archivo)
-        X.append(procesar_imagen(ruta))
-        y.append(0)
-
-    return np.array(X), np.array(y)
-
-'''
-    
 # =========================
 # 2. EVALUAR MODELO
 # =========================
@@ -82,26 +71,24 @@ def evaluar(modelo, X_test, y_test, nombre):
 # 3. ENTRENAMIENTO
 # =========================
 def entrenar():
-    print("Cargando dataset...")
-    X, y = cargar_dataset() # llama a la funcion de cargar imagenes
-    print("ANTES DE EXPORTAR CSV")
-    exportar_csv(X, y)
-    print("DESPUÉS DE EXPORTAR CSV")
+    print("Cargando dataset desde CSVs...")
+    X, y = cargar_dataset_csvs()
 
-    print("Dividiendo datos...")
+    print("\nDividiendo datos...")
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
     )
 
     mejores_modelos = {}
 
     # =========================
-    # KNN + GridSearch
+    # KNN
     # =========================
     print("\nEntrenando KNN...")
-    knn_params = {
-        'n_neighbors': [1, 3, 5, 7]
-    }
+    knn_params = {'n_neighbors': [1, 3, 5, 7]}
 
     knn_grid = GridSearchCV(KNeighborsClassifier(), knn_params, cv=5)
     knn_grid.fit(X_train, y_train)
@@ -123,12 +110,10 @@ def entrenar():
     mejores_modelos["NB"] = (nb, nb.score(X_train, y_train))
 
     # =========================
-    # Árbol de decisión + GridSearch
+    # Árbol de decisión
     # =========================
     print("\nEntrenando Árbol de Decisión...")
-    tree_params = {
-        'max_depth': [5, 10, 20, None]
-    }
+    tree_params = {'max_depth': [5, 10, 20, None]}
 
     tree_grid = GridSearchCV(DecisionTreeClassifier(), tree_params, cv=5)
     tree_grid.fit(X_train, y_train)
@@ -139,7 +124,7 @@ def entrenar():
     mejores_modelos["TREE"] = (tree_best, tree_grid.best_score_)
 
     # =========================
-    # SVM + GridSearch
+    # SVM
     # =========================
     print("\nEntrenando SVM...")
     svm_params = {
@@ -182,34 +167,6 @@ def entrenar():
     joblib.dump(mejor_modelo, ruta_modelo)
 
     print(f"\nModelo guardado en: {ruta_modelo}")
-
-# =========================
-# Exportar CSV
-# =========================
-
-def exportar_csv(X, y):
-    print("\nExportando dataset a CSV...")
-
-    # Crear nombres de columnas
-    columnas = [f"pixel_{i}" for i in range(X.shape[1])]
-    
-    # Crear DataFrame
-    df = pd.DataFrame(X, columns=columnas)
-    
-    # Agregar etiqueta
-    df["label"] = y
-
-    # Crear carpeta si no existe
-    os.makedirs("../data", exist_ok=True)
-
-    # Guardar CSV
-    ruta_csv = "../data/dataset.csv"
-    df.to_csv(ruta_csv, index=False)
-
-    print(f"CSV guardado en: {ruta_csv}")
-
-
-
 
 
 # =========================
