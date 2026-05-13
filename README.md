@@ -39,6 +39,12 @@ source venv/bin/activate
 ```bash
 venv\Scripts\activate
 ```
+
+Si PIP no existe instalar
+```bash
+sudo apt install python3-pip
+```
+
 ### Instalar dependencias
 Dentro del entorno virtual
 ```bash
