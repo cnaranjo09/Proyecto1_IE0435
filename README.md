@@ -72,5 +72,9 @@ python train.py
 - Se genera el dataset en formato CSV:
    [data/dataset.csv](https://github.com/cnaranjo09/Proyecto1_IE0435/tree/main/data)
 
- - Se muestran métricas en consola (accuracy, precision, recall, f1-score)
+- Se muestran métricas en consola (accuracy, precision, recall, f1-score)
+ 
+- El informe final y el archivo Model_card se encuentran dentro de la carpeta reports
+    [Iforme final](https://github.com/cnaranjo09/Proyecto1_IE0435/blob/main/reports/Informe.md)
+    [Model_card](https://github.com/cnaranjo09/Proyecto1_IE0435/blob/main/reports/MODEL_CARD.md)
 
